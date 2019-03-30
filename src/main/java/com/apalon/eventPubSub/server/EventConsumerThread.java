@@ -17,9 +17,13 @@ public class EventConsumerThread implements Runnable{
 
     public void run() {
         try {
+
             while(true) {
                 EventDTO events = (EventDTO) queue.take();
-                System.out.println("BE Server:Events submited by user -> (" + events.getUserId() + ") Mobile MEI_id -> (" + events.getMobileIMEI_id() + ") and event name -> (" + events.getEventName()+")");
+                System.out.println("Consumer End : Events submited by user : (" + events.getUserId() + ")" + "\n" +
+                        "Mobile MEI_id -> (" + events.getMobileIMEI_id() + ")" + "\n" +
+                        "event name -> (" + events.getEventName()+")" + "\n" +
+                        "========================================");
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

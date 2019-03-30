@@ -36,7 +36,6 @@ public class EventProducerThread  implements Runnable{
         HttpEntity<EventDTO> eventDTOHttpEntity = null;
         EventDTO eventDTO = null;
         while (true) {
-
             try {
                 if(queue.size()>0) {
                     eventDTO = queue.poll();
