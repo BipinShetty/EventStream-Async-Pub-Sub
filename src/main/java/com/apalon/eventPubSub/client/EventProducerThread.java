@@ -74,7 +74,7 @@ public class EventProducerThread  implements Runnable{
         }
     }
     private URI getUri() {
-        final String baseUrl = "http://localhost:"+8080+"/events";
+        final String baseUrl = "http://localhost:8080/publish/events";
         URI uri = null;
         try {
             uri = new URI(baseUrl);

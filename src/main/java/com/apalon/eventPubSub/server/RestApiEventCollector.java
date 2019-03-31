@@ -17,7 +17,7 @@ public class RestApiEventCollector {
     @Autowired
     IProcessEvents processEvents;
 
-    @RequestMapping(value = "/events", method = RequestMethod.POST)
+    @RequestMapping(value = "publish/events", method = RequestMethod.POST)
     public ResponseEntity<String> createEmployee(@RequestBody EventDTO eventDTO )
     {
         try {
