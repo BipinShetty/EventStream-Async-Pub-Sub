@@ -44,10 +44,14 @@ The Events gets logged in BE as
 Consumer End : Events submited by user : (Samantha)
 Mobile MEI_id -> (SDF45435)
 event name -> (session_start)
+event Id -> (ebfd9fbf-ae9d-449c-8fb1-67bcc23deb27)
+event dateTime -> (2019-04-01T20:25:38.120)
 ========================================
 Consumer End : Events submited by user : (John)
 Mobile MEI_id -> (34WED234D)
 event name -> (iap_purchase)
+event Id -> (8d5f5d48-6f5a-4eec-891b-02a8f61cbb70)
+event dateTime -> (2019-04-01T20:25:38.120)
 ========================================
 
 ##Resilience
@@ -57,7 +61,7 @@ Test#1) "Ensure that every event in the mobile app is tracked by using a retry m
 The mobile events generated at the high stream(RestApiEventPublisher) is stored in a client-side queue and send to server with an EventProducerThread.
 -This makes every event of interest stored and streamed to the server with real-time and no event data loss.
 -In case a message is not received by server(HttpStatus is not accepted or some exception on rest call), the thread makes "3" attempts to re-send the
-event. This happens in EventProducerThread.
+event. After re-try fails(mobile offline,network,server down etc) the event is put back to queue, till queue is full.This happens in EventProducerThread.
 
 Server Side
 Test#2) "Be mindful of the performance of your code as this server is supposed to provide service for a high throughput and low latency messaging traffic."

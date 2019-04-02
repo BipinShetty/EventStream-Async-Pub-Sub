@@ -9,6 +9,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -26,6 +28,8 @@ public class MobileEventListener implements ApplicationListener<MobileEvent> {
         eventDTO.setEventName(event.getEvent().getEventName());
         eventDTO.setMobileIMEI_id(event.getMobileIMEI_id());
         eventDTO.setUserId(event.getUserId());
+        eventDTO.setDateTime(LocalDateTime.now());
+        eventDTO.setEventId(UUID.randomUUID());
 
         // Add the mobile event to producer queue.
         EventProducerThread.add(eventDTO);

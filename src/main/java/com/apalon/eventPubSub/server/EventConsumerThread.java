@@ -23,6 +23,8 @@ public class EventConsumerThread implements Runnable{
                 System.out.println("Consumer End : Events submited by user : (" + events.getUserId() + ")" + "\n" +
                         "Mobile MEI_id -> (" + events.getMobileIMEI_id() + ")" + "\n" +
                         "event name -> (" + events.getEventName()+")" + "\n" +
+                        "event Id -> (" + events.getEventId()+")" + "\n" +
+                        "event dateTime -> (" + events.getDateTime()+")" + "\n" +
                         "========================================");
             }
         } catch (InterruptedException e) {

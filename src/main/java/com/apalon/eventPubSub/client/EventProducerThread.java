@@ -28,10 +28,10 @@ public class EventProducerThread  implements Runnable{
         this.queue = queue;
     }
     URI uri = getUri();
+    RestTemplate restTemplate = new RestTemplate();
 
     public void run() {
 
-        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = null;
         HttpEntity<EventDTO> eventDTOHttpEntity = null;
         EventDTO eventDTO = null;
@@ -45,13 +45,14 @@ public class EventProducerThread  implements Runnable{
                     response = restTemplate.exchange(uri, POST, eventDTOHttpEntity, String.class);
                     // If the message is not accepted by server
                     // We re-try for 3 times.
+                    // Re-queue if tries fail to avoid event data loss.
                     if (HttpStatus.ACCEPTED != response.getStatusCode()) {
-                        reTry(restTemplate, uri, eventDTO);
+                        reTryOrReQueue(eventDTO);
                     }
                 }
             } catch (RestClientException exception) {
                 // We re-try for 3 times in case of client exception or network failure.
-                reTry(restTemplate, uri, eventDTO);
+                reTryOrReQueue(eventDTO);
             }
         }
     }
@@ -66,13 +67,18 @@ public class EventProducerThread  implements Runnable{
         }
     }
 
-    private void reTry(RestTemplate restTemplate, URI uri, EventDTO eventDTO) {
+    private void reTryOrReQueue(EventDTO eventDTO) {
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         while (reTry_Count > 0 && HttpStatus.CREATED != response.getStatusCode()) {
             response = restTemplate.postForObject(uri, eventDTO, ResponseEntity.class);
             reTry_Count--;
         }
+        //Re-queue.
+        if (HttpStatus.ACCEPTED != response.getStatusCode()) {
+            queue.add(eventDTO);
+        }
     }
+
     private URI getUri() {
         final String baseUrl = "http://localhost:8080/publish/events";
         URI uri = null;
